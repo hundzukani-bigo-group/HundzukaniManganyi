@@ -1,0 +1,13 @@
+<!-- nav -->
+<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="client">
+  <div class="navbar-nav">
+    <a class="nav-item nav-link" (click)="logout()">Logout</a>
+  </div>
+</nav>
+
+<div class="p-4">
+  <div class="container">
+    <h1>Welcome {{client.firstName}} {{client.lastName}}</h1>
+    <p>You're successfully logged in.</p>
+  </div>
+</div>
