@@ -57,6 +57,29 @@ public class ClientServiceTest {
                 .expectComplete();
     }
 
+    @Test
+    public void testAuthenticate_Given_Valid_Credentials() {
+        Mockito.when(this.clientRepository.authenticate(Mockito.any(), Mockito.any())).thenReturn(Mono.just(ClientTestData.getClientTestData()));
+        Mono<ClientDetails> clientDetailsMono = this.clientService.authenticate("test", "password");
+        StepVerifier
+                .create(clientDetailsMono)
+                .assertNext(response -> {
+                    Assertions.assertNotNull(response);
+                })
+                .expectNextCount(0)
+                .verifyComplete();
+
+    }
+
+    @Test
+    public void testAuthenticate_Given_InValid_Credentials() {
+        Mockito.when(this.clientRepository.authenticate(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mono<ClientDetails> clientDetailsMono = this.clientService.authenticate("test", "password");
+        StepVerifier
+                .create(clientDetailsMono)
+                .verifyComplete();
+
+    }
 
     @Test
     public void testFindByUsername_Given_Valid_Username() {

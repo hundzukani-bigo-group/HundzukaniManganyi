@@ -11,6 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import za.co.finbond.assessment.hundzukani.manganyi.dto.AuthenticationRequest;
 import za.co.finbond.assessment.hundzukani.manganyi.dto.ClientDetails;
 import za.co.finbond.assessment.hundzukani.manganyi.repository.ClientRepository;
 import za.co.finbond.assessment.hundzukani.manganyi.service.impl.ClientServiceImpl;
@@ -72,6 +73,28 @@ public class ClientControllerTest {
                 .bodyValue(request)
                 .exchange()
                 .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    @WithMockUser(username = "test", password = "test", roles = {"USER", "ADMIN"})
+    void test_authenticate_Success() {
+
+        AuthenticationRequest request = ClientTestData.getAuthenticationRequest();
+
+        when(this.clientRepository.authenticate(any(), any())).thenReturn(Mono.just(ClientTestData.getClientTestData()));
+
+        this.webTestClient.mutateWith(SecurityMockServerConfigurers.csrf()).post()
+                .uri("/client/authenticate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .cookie(XSRF_TOKEN, UUID.randomUUID().toString())
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(ClientDetails.class)
+                .value(response -> {
+                    Assertions.assertNotNull(response);
+                });
     }
 
     @Test

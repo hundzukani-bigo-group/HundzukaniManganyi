@@ -2,6 +2,7 @@ package za.co.finbond.assessment.hundzukani.manganyi.testdata;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import za.co.finbond.assessment.hundzukani.manganyi.dto.AuthenticationRequest;
 import za.co.finbond.assessment.hundzukani.manganyi.dto.ClientDetails;
 import za.co.finbond.assessment.hundzukani.manganyi.entities.ClientEntity;
 
@@ -22,6 +23,14 @@ public final class ClientTestData {
                 .firstName("Hundzukani")
                 .lastName("Manganyi")
                 .username("Hundzu")
+                .password("password")
+                .build();
+    }
+
+
+    public static AuthenticationRequest getAuthenticationRequest() {
+        return AuthenticationRequest.builder()
+                .username("test")
                 .password("password")
                 .build();
     }
